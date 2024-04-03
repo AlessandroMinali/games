@@ -1,15 +1,15 @@
 # games
 
 ## Card based
-[Durak](/durak) - classic
-[Slap](/slap) - classic
-[Swap](/swap) - classic
-[Revolution](/revolution) - COUP conversion
+[Durak](/games/durak) - classic  
+[Slap](/games/slap) - classic  
+[Swap](/games/swap) - classic  
+[Revolution](/games/revolution) - COUP conversion  
 
 ## Dice based
-[Mythic Bastionland](/mythic) - TTRPG
-[Goblin with a Fat Ass](/goblin) - TTRPG
-[Turnip28](/turnip28) - Skirmish Wargame
+[Mythic Bastionland](/games/mythic) - TTRPG  
+[Goblin with a Fat Ass](/games/goblin) - TTRPG  
+[Turnip28](/games/turnip28) - Skirmish Wargame  
 
 ## Combo
-[Turnip52](/turnip52) - Skirmish Wargame
+[Turnip52](/games/turnip52) - Skirmish Wargame  
