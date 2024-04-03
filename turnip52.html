@@ -3,6 +3,8 @@ div { display: flex; }
 pre { white-space: pre-wrap; display: inline; margin: 0; flex: 1 1 0px; padding: 0 3px; }
 a { color: red; }
 html { font-size: 11px; }
+hr { display: none; }
+@media screen and (max-width: 850px) { div, hr { display: block; } }
 </style>
 <div>
 <pre>
@@ -76,6 +78,7 @@ TERRAIN
 <span style="text-decoration: underline">Victory</span>: Whoever holds the most objectives
 <span style="text-decoration: underline">Sudden Death</span>: Losing you Toff and all Snobs means automatic defeat.
 </pre>
+<hr />
 <pre>
 MECHANICS
 <span style="text-decoration: underline">Measuring</span>:

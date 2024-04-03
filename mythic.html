@@ -4,11 +4,12 @@ pre { white-space: pre-wrap; display: inline; margin: 0; flex: 1 1 0px; }
 a { color: red; }
 .title { background-color: black; color: white; }
 footer { font-size: 8px; }
+hr { display: none; }
+@media screen and (max-width: 850px) { div, hr { display: block; } }
 </style>
-<h1 style='text-align: center; '>KNIGHT GENERATOR - MYTHIC BASTIONLAND</h1>
 <div>
 <pre>
-<div class='title'><span id='name' contenteditable=true></span> - Glory 0</div><span id='vig'>VIG</span>    <i>Strong limbs, firm hands, powerful lungs</i>
+<div class='title'><span id='name' contenteditable=true></span> - Glory <span contenteditable=true>0</span></div><span id='vig'>VIG</span>    <i>Strong limbs, firm hands, powerful lungs</i>
 <span id='cla'>CLA</span>    <i>Keen instinct, lucid mind, shrewd eyes</i>
 <span id='spi'>SPI</span>    <i>Charming tongue, iron will, fierce heart</i>
 GD	<span id='guard'></span>
@@ -29,8 +30,8 @@ camping gear
  HONOUR THE SEERS 
   FREE THE REALM  
 </code>
-
 </pre>
+<hr />
 <pre>
 <div class='title'>FEATS - 1/attack</div>SMITE	+<a style='color: red; cursor: pointer;' onClick='roll(12)'>d12</a> or blast for melee attack, VIG Save or FATIGUED
 FOCUS	gambit with no die, CLA Save or FATIGUED
@@ -57,7 +58,7 @@ GREATER EFFECT  cannot be used to increase BOLSTER
 6. Subtract target's total ARMOUR score
 7. The attack causes that much damage
 
-<footer>Rules by <a href="https://www.kickstarter.com/projects/bastionland/mythic-bastionland-rpg-before-into-the-odd/">Chris McDowall</a>. Character generator by <a href="https://github.com/AlessandroMinali">Alessandro Minali</a>.</footer>
+<footer>Mythic Bastionland Rules by <a href="https://www.kickstarter.com/projects/bastionland/mythic-bastionland-rpg-before-into-the-odd/">Chris McDowall</a>. Character generator by <a href="https://github.com/AlessandroMinali">Alessandro Minali</a>.</footer>
 </pre>
 </div>
 <script type="text/javascript">

@@ -5,6 +5,8 @@ pre { white-space: pre-wrap; display: inline; margin: 0; flex: 1 1 0px; padding:
 #escalate { text-decoration: underline; cursor: pointer; color: red }
 footer { font-size: 8px; }
 a { color: red }
+hr { display: none; }
+@media screen and (max-width: 850px) { div, hr { display: block; } }
 </style>
 <div>
 <pre>
@@ -21,6 +23,7 @@ Fate rewarded you after <span id='r_history'></span>.
 
 You are a group of ne'rdowells with one goal: to rob the <span id='r_rich_person'></span> in town blind, at <span id='r_location'></span>. You know they have <span id='r_target'></span> in <span id='r_safe'></span> guarded by <span id='r_guard'></span>.
 </pre>
+<hr />
 <pre>
 PLAY SEQUENCE
 1. The disaster master describes the scene.

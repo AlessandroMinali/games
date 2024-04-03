@@ -10,6 +10,8 @@ td { border: 1px solid black; text-align: center; padding: 0 3px; }
 div { display: flex; }
 pre { white-space: pre-wrap; display: inline; margin: 0; flex: 1 1 0px; }
 a { color: red; }
+hr { display: none; }
+@media screen and (max-width: 850px) { div, hr { display: block; } }
 </style>
 <div>
 <pre>
@@ -46,6 +48,7 @@ Take turns going clockwise performing one of the following actions per turn:
 <span style="text-decoration: underline;">REVOLUTION</span>: Pay seven coins to the BANK, force a player to SACRIFICE. If you start the turn with 10+ COINs you must take this action.
 
 </pre>
+<hr />
 <pre>
 DENYING
 Any player may block the current player from taking their action if they claim to have the proper card. If so, the player is prevented from taking the action but they may CONFRONT their opposition. If the CONFRONTATION is successful, the current player completes their original action and the confronting player must SACRIFICE.
