@@ -1,0 +1,256 @@
+<style type="text/css">
+div { display: flex; }
+pre { white-space: pre-wrap; display: inline; margin: 0; flex: 1 1 0px; padding: 5px; }
+.title { background-color: black; color: white; }
+#escalate { text-decoration: underline; cursor: pointer; color: red }
+footer { font-size: 8px; }
+a { color: red }
+</style>
+<div>
+<pre>
+<big><span class='title'>YOU ARE A GOBLIN</span></big> with an ass that is <span id='r_ass'></span>
+Fate rewarded you after <span id='r_history'></span>.
+
+<span class='title'>CLASS</span> <span id='r_klass'></span>
+<span class='title'>ABILITY</span>
+<span id='r_ability'></span>
+<span class='title'>SKLLS</span>
+<span id='r_skills'></span>
+<span class='title'>PROPERTY</span>
+<span id='r_pocket'></span>
+
+You are a group of ne'rdowells with one goal: to rob the <span id='r_rich_person'></span> in town blind, at <span id='r_location'></span>. You know they have <span id='r_target'></span> in <span id='r_safe'></span> guarded by <span id='r_guard'></span>.
+</pre>
+<pre>
+PLAY SEQUENCE
+1. The disaster master describes the scene.
+2. Players describe their actions.
+3. DM describes outcomes.
+4. Repeat.
+
+ROLLS
+If action taken is contested or unclear roll 1d6.
+On 4+ you do it <b>otherwise you don't and suffer CONSEQUENCES</b>
+Hard rolls require you to roll <b><6></b> to succeed.
+
+ROLL MODIFIERS
+  +d6 if you have a <b>SKILL</b> or a situational advantage
+  -d6 if you're dazed or the situation is bad
+  *Rolls of 0d6 instead become 2d6 pick lowest
+
+RISKY ROLLS
+Along side the normal roll you must <b>roll ass</b>(the die at the top of your character sheet).
+If you get a <b><6></b> you gain a surprising benefit to the action, and the more 6s rolled the better the advantage. Applies even if you main roll fails.
+If you get a <b><1></b> there is a downside, and the more 1s rolled the worse the disadvantage. Applies even if your main roll succeeds.
+<b>1s and 6s cancel each other out</b>
+
+CHAOS CLOCK
+For every 1 in the final result of RISKY ROLLS tick the clock. After 12 ticks <b>shit hits the fan</b>. The players have one last chance to accomplish what they are doing until everything goes against their favor.
+
+CONSEQUENCES
+a. Pay a cost
+b. Smack someone
+c. Start a ticking clock
+d. <span id='escalate' onclick="sit()">Escalate the situation</span>
+
+<footer>Rules by <a href="https://twitter.com/Orbitaldropkick/status/1728889290040680461">Tom Bloom</a>. Character generator by <a href="https://github.com/AlessandroMinali">Alessandro Minali</a>.</footer>
+</pre>
+</div>
+<script type="text/javascript">
+  // The rich person in question
+  rich_person = [
+    'the mayor',
+    'a war criminal(retired)',
+    'the butter baron',
+    'a fireworks factory magnate',
+    'an exotic/mythical animal menagerie owner',
+    'a sweatshop fashion icon',
+  ];
+
+  // The location
+  locale = [
+    "the gala of the decade at the mayor's mansion",
+    "a private fortified train",
+    "a crumbling castle residence(rented)",
+    "a secret underwater base",
+    "an ancient volcano temple",
+    "a luxurious mansion on the edge of a cliff",
+  ]
+
+  // What are we robbing?
+  target = [
+    "big honking gold bars(heavy)",
+    "an imprisoned greed demon(loud, complains)",
+    "the world's most expensive dog",
+    "a recipe for the secret sauce(kept in a 300lb safe)",
+    "the hand of King Midas(still works!)",
+    "a potion of eternal youth(drinkable by two goblins or one human)",
+  ]
+
+  // ...protected by a cadre of numerous but poorly paid guards and :
+  guard = [
+    "bloodthirsty goblin hating pirate mercenaries",
+    "merciless automata programmed to kill goblins on sight",
+    "vicious anti-goblin attack wyverns",
+    "dwarves(they just really hate goblins)",
+    "a crack anti-goblin assault squad with cool call signs",
+    "bound goblin-destroying shadow demons(its in the contract)",
+  ]
+
+  // ... and locked in:
+  safe = [
+    "a glassroom suspended over a lake(of lava?)",
+    "a clockwork vault that changes shape every hour",
+    "an enormous quantum vault connected by a series of portals",
+    "a living vault embedded in a huge beast",
+    "the torment nexus",
+    "a case that explodes if it feels the touch of a goblin for more than five seconds",
+  ]
+
+  goblin = [
+    'a shame to goblinkind. (0d6)',
+    'a reasonable firm handful. (1d6)',
+    'a bubble butt. (2d6)',
+    'like a thick stack of pancakes. (3d6)',
+    'a green dump truck. (4d6)',
+    'the juggernaut. (5d6)',
+    'the terminator. (6d6)',
+    '...oh no. (7d6)',
+  ]
+
+  work = [
+    { h: "a life of leisure and indolence", s: ["charisma", "fashion", "wine tasting"]},
+    { h: "long years in the goblin wars", s: ["stabbing", "biting", "spitting"]},
+    { h: "an accident at wizard summer camp", s: ["detect magic", "use magic device"]},
+    { h: "you worked hard for it", s: ["weight lifting", "climbing", "calisthenics"]},
+    { h: "being blessed by an enthusiastic nymph", s: ["nature", "alchemy", "skinny dipping"]},
+  ]
+
+
+  klass = [
+    {
+      k: "Fighter",
+      s: ["fighting", "stunt work"],
+      a: "roll ass to instantly disarm an opponent or violently smash a non-reinforced object or door into pieces"
+    },
+    {
+      k: "Thief",
+      s: ["lock picking", "sneaking", "pulling a fast one"],
+      a: "roll ass to instantly steal any loose object not held or worn in hand's reach(doesn't work on other thieves)"
+    },
+    {
+      k: "Barbarian",
+      s: ["intimidation", "athletics", "competitive eating"],
+      a: "No penalty for dazed. May ignore knocked out once"
+    },
+    {
+      k: "Wizard",
+      s: ["knowledge(goblin magic)", "Dewey decimal system"],
+      a: "may roll ass to light most anything on fire"
+    },
+    {
+      k: "Priest",
+      s: ["knowledge(goblin religion)", "gardening", "trading cards"],
+      a: "pray to a goblin deity to make a re-roll of all dice(take second result as final) for anyone, may re-roll after seeing final result. This always works twice. The third time or more the deity may demand a price."
+    },
+    {
+      k: "Bard",
+      s: ["performance", "alcohol tolerance", "making playlists"],
+      a: "roll ass to perform with their instrument of choice or speech and convincingly distract a small or large group of people or creatures for 1 minute plus an additional minute per 6 rolled, only works once on the same group of people"
+    },
+    {
+      k: "Warlock",
+      s: ["knowledge(goblin occult", "candles"],
+      a: "curse someone and roll ass to take them out non-lethally instantly, they have to be able to hear you, they recover after 1 minute and it only works one the same person once"
+    },
+    {
+      k: "Paladin",
+      s: ["knowledge(non-goblin religion", "armor care, baking"],
+      a: "may always choose to count own ass size as 1 when rolling"
+    },
+  ]
+
+  // for big natural asses
+  work.push({ h: "being just big and natural", s: shuffle(
+    work.map(x => x.s).concat(klass.map(x => x.s).flat())
+  ).slice(0, 2)});
+
+  pocket = [
+    "fabulous hat, stethoscope, tape, screwdriver, bottle of orc liqor(antiseptic, possibly drinkable)",
+    "the greatest perfectly shaped smooth and shiny stone you have ever seen",
+    "various meat pies, pocket contents of a guard, king, knife(bigger), ten foot of rope",
+    "telescope(stolen), strong acid, four glass vials, unexploded artillery shot",
+    "oddly sized key, bottle of oil(flammable), jar of ball bearing",
+    "three different pairs of shoes, sunglasses, overcoat, loose sandwich, matches"
+  ]
+
+  situation = [
+    "guards are alerted or start catching up",
+    "light something on fire",
+    "something that wasn't supposed to break breaks",
+    "drop or lose track of something important",
+    "something goes wildly out of control",
+    "someone get split from the groups",
+  ]
+
+  function choose(arr) {
+    return arr[Math.floor(Math.random() * arr.length)]
+  }
+
+  function shuffle(array) {
+    let currentIndex = array.length;
+    while (currentIndex != 0) {
+      let randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex], array[currentIndex]];
+    }
+    return array;
+  }
+
+  function d(max) {
+    return Math.floor(Math.random() * max) + 1;
+  }
+
+  function roll(max, n = 1, mod = 0) {
+    r = []
+    let m;
+    for (let i  = 0; i < n; ++i) {
+      r.push(d(max));
+    }
+    total = (r.reduce((a, b) => a + b, 0) + mod)
+
+    s = "Rolling ";
+    if (n > 1) { s += n };
+    s += `d${max}`
+    if(mod != 0) {
+      m = mod > 0 ? `+${mod}` : mod
+      s += m
+    } else {
+      m = ''
+    }
+
+    confirm(`${s}\n<${r.join(' + ')}>${m}= ${total}`)
+  }
+
+  function sit() {
+    confirm(choose(situation));
+  }
+
+  r_ass.innerText = choose(goblin);
+  background  = choose(work);
+  r_history.innerText = background.h
+  k = choose(klass);
+  r_klass.innerText = k.k;
+  r_ability.innerText = k.a;
+  r_skills.innerText = (background.s).concat(k.s).sort().join(', ');
+  r_pocket.innerText = choose(pocket);
+
+  r_rich_person.innerText = choose(rich_person);
+  r_location.innerText = choose(locale);
+  r_target.innerText = choose(target);
+  r_safe.innerText = choose(safe);
+  r_guard.innerText = choose(guard);
+
+  document.body.innerHTML = document.body.innerHTML.replace(/([0-9]?)d([0-9][0-9]?)/g,"<a style='color: red; cursor: pointer;' onClick='roll($2, $1)'>$&</a>")
+</script>

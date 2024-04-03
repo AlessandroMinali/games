@@ -1,0 +1,71 @@
+<style type="text/css">
+td { border: 1px solid black; text-align: center; padding: 0 3px; }
+.orange, .pale, .dark, .pink, .green, .red { color: white; }
+.orange { background-color: #E69F00; }
+.pale { background-color: #56B4E9; }
+.dark { background-color: #0072B2; }
+.pink { background-color: #CC79A7; }
+.green { background-color: #009E73; }
+.red { background-color: #D55E00; }
+div { display: flex; }
+pre { white-space: pre-wrap; display: inline; margin: 0; flex: 1 1 0px; }
+a { color: red; }
+</style>
+<div>
+<pre>
+REVOLUTION <small>a game of bluffing converted to a standard card deck by <a href="https://github.com/AlessandroMinali">Alessandro Minali</a></small>
+
+PLAYERS: 2+
+MATERIALS: Standard 52 card deck.
+GOAL: Be the last player with cards.
+
+SETUP
+1. Collect three of each of the following cards <span class='pale'>3</span>, <span class='dark'>A</span>, <span class='green'>J</span>, <span class='orange'>Q</span>, <span class='pink'>K</span>. This is the main deck. The remaining cards will be the BANK with each card equal to one COIN.
+2. Shuffle the main deck.
+3. Deal each player two cards face down.
+4. Deal two COINs to each player to start.
+
+CARD POWERS
+<span class='pale'>EXECUTIONER(3)</span> may perform the <span class='pale'>EXECUTE</span> action.
+  <span class='dark'>COMMANDER(A)</span> may perform the <span class='dark'>STEAL</span> action or block a <span class='dark'>STEAL</span> action.
+   <span class='green'>DIPLOMAT(J)</span> may perform the <span class='green'>SWAP CARDS</span> or block a <span class='dark'>STEAL</span> action.
+  <span class='orange'>CONCUBINE(Q)</span> may block <span class='pale'>EXECUTE</span> action.
+      <span class='pink'>BARON(K)</span> may perform the action <span class='pink'>TAXES</span> or block the <span style="text-decoration: underline;">TRIBUTE</span> action.
+<b>Regardless of whether you hold a card, you may bluff and pretend that you do!</b>
+
+PLAY
+You may look at your own cards at any time.
+Player left of the dealer starts.
+Take turns going clockwise performing one of the following actions per turn:
+    <span style="text-decoration: underline;">INCOME</span>: Take a COIN from BANK.
+   <span style="text-decoration: underline;">TRIBUTE</span>: Take two COINs from BANK.
+     <span class='pink'>TAXES</span>: Take three COINs from the BANK.
+   <span class='pale'>EXECUTE</span>: Pay three coins to the BANK, force a player to lose a card.
+     <span class='dark'>STEAL</span>: Take two COINs from another player.
+<span class='green'>SWAP CARDS</span>: Draw two cards from the deck. Place any two cards back into the deck. Shuffle.
+<span style="text-decoration: underline;">REVOLUTION</span>: Pay seven coins to the BANK, force a player to SACRIFICE. If you start the turn with 10+ COINs you must take this action.
+
+</pre>
+<pre>
+DENYING
+Any player may block the current player from taking their action if they claim to have the proper card. If so, the player is prevented from taking the action but they may CONFRONT their opposition. If the CONFRONTATION is successful, the current player completes their original action and the confronting player must SACRIFICE.
+
+CONFRONTATION
+Any player may CONFRONT the current player when they take an action if they think they are bluffing. The current player must prove they have the card or else lose the CONFRONTATION.
+If the current player has correct card they show the card, place it back into the deck, shuffle, draw a new card. The opposing played has lost the CONFRONTATION and must SACRIFICE. Otherwise the current player must SACRIFICE.
+
+SACRIFICE
+Turn one of your cards face up and place in the discard pile, it is no longer in play. If that is your final card you are eliminated.
+
+<table>
+  <th>ACTION</th><th>RESULT</th><th>CAN BE CONFRONTED</th><th>DENIED BY</th>
+  <tr><td>INCOME</td><td>Gain 1 COIN</td><td></td><td></td></tr>
+  <tr><td>TRIBUTE</td><td>Gain 2 COIN</td><td></td><td><span class='pink'>BARON(K)</span></td></tr>
+  <tr><td><span class='pink'>TAXES</span></td><td>Gain 3 COIN</td><td>x</td><td></td></tr>
+  <tr><td><span class='pale'>EXECUTE</span></td><td>Pay 3 COIN, force a player to SACRIFICE</td><td> x </td><td><span class='orange'>CONCUBINE(Q)</span></td></tr>
+  <tr><td><span class='dark'>STEAL</span></td><td>Take 2 COIN from a player</td><td>x</td><td><span class='green'>DIPLOMAT(J)</span>, <span class='dark'>COMMANDER(A)</span></td></tr>
+  <tr><td><span class='green'>SWAP CARDS</span></td><td>Draw 2 cards, place 2 cards back, shuffle.</td><td>x</td><td> </td></tr>
+  <tr><td>REVOLUTION</td><td>Pay 7 COIN, force a player to SACRIFICE. Must take action if 10+ COIN.</td><td></td><td></td></tr>
+</table>
+</pre>
+</div>

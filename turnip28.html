@@ -1,0 +1,172 @@
+<style type="text/css">
+div { display: flex; }
+pre { white-space: pre-wrap; display: inline; margin: 0; flex: 1 1 0px; }
+a { color: red; }
+html { font-size: 11px; }
+</style>
+<div>
+<pre>
+SEQUENCE OF PLAY
+1. 'Make Ready' a Toff/Snob who hasn't acted this round.
+2. Choose unit in range to order. Cannot Order other Snobs.
+3. Declare Order for unit.
+4. Check for Blunder.
+5. Execute Order.
+Keep alternating turns. If one player runs out of Snobs the other player may keep acting until all their Snobs have been Made Ready.
+Once all Snobs have gone then each follower who hasn't be given an order repeats 3-4, but now may suffer Scenario Blunders.
+
+RETREATING
+1. Determine furthest model from the enemy and move that model directly away from the enemy no less than d6 + 2" per panic token.
+2. Keep moving backwards if you cannot find a space which obeys the 1" RULE.
+3. Make a Dangerous Terrain Test each time you cross over any Follower or move through Dangerous Terrain.
+
+TARGETING: Must target closest enemy within line of sight(LoS). All units have 360deg field of view.
+IMPROBABLE HIT(ie. 7+): Roll an unmodified 6 then roll again unmodified 4+ to hit.
+LINE OF SIGHT(LoS): Blocked by all units(except Snobs) and terrain if it obscures almost all of a model. If one model has LoS, then the entire unit does as well.
+RANGE: Any part of target model must be within the specified value. If one model is in range, then the entire unit is as well.
+
+1" RULE
+1. Must end all movement 1" away from friendly units unless friendly Snob or charging target enemy.
+2. Must never cross within 1" of enemy unless charging or retreating.
+3. May only cross through other units while retreating.
+
+BLUNDER TEST: d6, on a 1 then unit receives a panic token and follow blunder penalty. Snobs can never blunder.
+SCENARIO BLUNDER: Instead of normal blunder, refer to the scenario for what happens.
+PANIC TEST: d6 + panic tokens on unit, if greater than 6 then the unit retreats.
+
+DANGEROUS TERRAIN TEST
+1. roll d6 per model in the unit
+2. Unit must remove models equal to the 1s rolled.
+3. Unit gains 1 panic token if any models were removed.
+
+TERRAIN
+Cover: If target unit has half their models behind and within 3" of cover then +1 Inaccuracy to shooter. 
+Defensible: If within then target is Fearless, if wholly within then also +1 Inaccuracy to shooter.
+Impassable: On contact, unit must remove models equal to units panic tokens. Includes board edge.
+Dangerous: Causes a Dangerous Terrain Test when actively moved through.
+
+INITIATIVE: Each player rolls d6 until one rolls higher, they go first.
+REGIMENT: 1 Toff + 2 Followers, 2 Snobs with 1 Follower each. Equip all units.
+DEPLOYMENT: Snob + attached Followers within deployment area alternating between players.
+ROUND: Once all units have performed an order or been Made Ready.
+GAME: 4 rounds.
+</pre>
+<pre>
+<a href="https://www.patreon.com/Turnip28">TURNIP28</a><small>v17 ruleset minified by <a href="https://github.com/AlessandroMinali">Alessandro Minali</a></small>
+
+ORDERS
+1. Volley Fire!
+  a. Reduce Inaccuracy by 1 unless Blunder.
+  b. Apply any other modifiers for shooting attacks.
+  c. Enter a Shooting Engagement with target in LoS.
+2. Move and Shoot!
+  a. Move up to your full Movement or just d6" if Blunder, commanding Snob may follow.
+  b. Roll any Dangerous Terrain Tests.
+  c. Apply any modifiers for shooting attacks.
+  d. Enter a Shooting Engagement with closest target in LoS.
+3. March!
+  a. Move up to full Movement + 2d6" (or Movement + d6" if Blunder), commanding Snob may follow.
+  b. Roll any Dangerous Terrain Tests.
+4. Charge!
+  a. Choose closest target within LoS and within Movement + 12" (or Movement + 6" if Blunder).
+  b. Target makes a Panic Test.
+  c. If Panicked enemy, then step e.
+  d. Target must Stand and Shoot if able. Target does not need to be range or have LoS to shoot. Target enters a Shooting Engagement but charging unit cannot fire back. If charging unit is not wiped out proceed to the next step.
+  e. Move towards the target Movement + 2d6" (or Movement + d6" if Blunder) by the shortest route possible, commanding Snob may follow.
+  f. Roll any Dangerous Terrain Tests.
+  g. If any charging model makes base to base contact with target then both units fight a Melee.
+
+SHOOTING ENGAGEMENT
+If they enemy unit can it must Return Fire.
+1. Each valid side rolls d6 per model in their unit and scores a "hit" for each die greater or equal than their own Inaccuracy.
+2. Each valid side rolls d6 per "hit" received from the enemy and receives a Wound to their unit for each die below its Vulnerability.
+3. Grant Wounds, removing models that reach their Wound limit and allocating remaining Wound to other models remaining in the unit.
+4. Determine winner by who ever inflicted the most Wound. Loser, if any, retreats.
+5. Units that were "hit", even if no Wound occurred, gain a panic token.
+
+MELEE
+Charging player starts first.
+1. Rolls d6 equal to combined Attack of every model of the charging unit and score a "hit" for each die greater or equal than their own Inaccuracy.
+2. Opponent rolls d6 per "hit" received from the enemy and receives a Wound to their unit for each die below their own Vulnerability.
+3. Grant Wounds, removing models that reach their Wound value and allocating remaining Wound to other models remaining in the unit.
+4. The opposing side repeats step 1-3 then go step 5.
+5. Determine winner by who ever inflicted the most Wound in this Melee. Loser retreats. If draw then start a new Melee. Automatically declared winner if opposing side is destroyed.
+6. Both units gain a panic token.
+</pre>
+</div>
+<hr />
+<div>
+<pre>
+EQUIPMENT
+Follower Equipment
+  a. Black Powder Weapons(Ranged): Can only shoot once per round.
+  b. Missile Weapons(Ranged): Target -2 Vulnerability.
+  c. Close Combat Weapons: -1 Inaccuracy on melee attacks. May re-roll charge distance, keep new result.
+Snob Equipment
+  a. Pistols and Sabres(Ranged): -
+</pre>
+<pre>
+STATS
+     Movement (M) Maximum distance unit may move in a round.
+       Attack (A) Number of dice rolled per model in a Melee.
+   Inaccuracy (I) Minimum result needed to land an attack.
+        Wound (W) Number of wounds a model may suffer before being slain.
+Vulnerability (V) Minimum result needed to avoid receiving a wound.
+</pre>
+</div>
+<hr />
+<div>
+<pre>
+SNOBS
+Toff(1 model)
+ M 6" | A 2 | I 5+ | W 2 | V 5+ 
+Command Range: 6"
+Weapons Range: 6"
+Toff Off!: If Made Ready can target another Toff within 18" and LoS then enter melee until one side dies.
+
+Toady(1 model)
+ M 6" | A 1 | I 5+ | W 1 | V 5+ 
+Command Range 3"
+Weapon Range: 6"
+
+FOLLOWERS
+Fodder(12 models)
+ M 6" | A 1 | I 6+ | W 1 | V 6+ 
+Weapon Range: 18"
+Safety in Numbers: If 8+ models remain, roll d6 before making a Panic Test. If 3+ do not retreat and automatically pass test.
+
+Brutes(6 models)
+ M 6" | A 2 | I 5+ | W 1 | V 5+ 
+Weapon Range: 18"
+Fearless: If 8+ models remain, roll d6 before making a Panic Test. If 3+ do not retreat and automatically pass test.
+
+Chaff(4 models)
+ M 6" | A 1 | I 5+ | W 1 | V 6+ 
+Weapon Range: 18"
+Sharpshooter: May choose target other than closest.
+Vanguard: May move Movement after Deployment/Preliminary Bombardment but before normal play starts. Snob may not follow.
+Skirmish: +2 Inaccuracy to unit targeting chaff with shooting.
+</pre>
+</pre>
+<pre>
+CAVALRY FOLLOWERS
+Whelps(4 models)
+ M 12" | A 2 | I 5+ | W 2 | V 6+ 
+Weapon Range: 18"
+Dash: Move an extra Movement after order complete. Snob may not follow.
+
+Bastards(3 models)
+ M 12" | A 4 | I 5+ | W 2 | V 5+ 
+Weapons Range: 18"
+Bowel-Loosening Charge: Targets begin charged by Bastards must re-roll and successful Panic Test.
+
+ARTILLERY FOLLOWERS
+Stump Gun(1 model)
+ M 0" | A 3 | I 6+ | W 3 | V 5+ 
+May only fire once per round.
+Weapon Range: 60", Round Shot: 3 shooting attack dice instead of one, hits cause 2 Wounds which cannot be prevented by Vulnerability rolls.
+Weapon Range: 12", Grape Shot: 3d6 shooting attacks against target.
+Unstable Icon: If has 3+ panic tokens before attacking and rolls 1 during shooting attacks, then it immediately explodes and is removed from play but may finalize its attack. Otherwise receive a panic token for each 1 rolled in Shooting Engagement.
+Preliminary Bombardment: Each stump gun starting with player with Initiative may make a free shooting attack. Cannot not cause retreats.
+</pre>
+</div>
