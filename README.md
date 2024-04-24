@@ -12,4 +12,4 @@
 [Turnip28](/games/turnip28) - Skirmish Wargame  
 
 ## Combo
-[Turnip52](/games/turnip52) - Skirmish Wargame  
+[Royal52](/games/royal52) - Skirmish Wargame  
