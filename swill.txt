@@ -1,0 +1,24 @@
+toff->berk
+toady->rotter
+follower->wretch
+follower->twerp
+
+dangerous terrain tests: re-roll any successful rolls if panic token
+climbing/jumping/falling
+injuries->roll d6 each time being pushed past 1 wound, take lowest: 2-6 knocked down, 1 death
+knocked down: stay at 1 wound, may not be targeted unless no other standing unit within 6" and LoS. if targeted instantly hit. cannot follow order(basically does nothing). auto falls if near ledge.
+
+cover->base to base, -1 vuln
+
+winners->most wounds, if no wounds then most hits
+charge->doesnt need LoS, possible to trip on downed targets
+
+melee-> increase A of models by +1 each successive bout
+
+panic->1 per model
+
+retreat->depends on entire teams panic count. enemy choose direction away! original retreating unit may cause friendly to retreat if come within 1"! contact stops retreats and knocks down. fails all hazard tests/jumping/tripping
+
+recovery: end of round remove panic from all standing models, stand up knocked down models
+
+firearms may have multi shots
