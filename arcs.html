@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ARCS Combat Simulator - Calculate expected dice results for the ARCS board game">
+  <title>ARCS Combat Simulator</title>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@4.4.19/dist/full.min.css" rel="stylesheet" type="text/css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+  /* CSS Variables */
+  :root {
+    --assault-color: #8B1A1A;
+    --skirmish-color: #2563EB;
+    --raid-color: #C2410C;
+  }
+
+  /* Theme Overrides */
+  [data-theme="dark"] {
+    --p: #d97706;
+    --pf: #b45309;
+    --s: #6b7280;
+    --sf: #4b5563;
+    --a: #d97706;
+    --n: #0f1419;
+    --b1: #0a0e13;
+    --b2: #151a20;
+    --b3: #1f252d;
+    --bc: #d1d5db;
+    --er: #ef4444;
+    --in: #60a5fa;
+    --wa: #d97706;
+    --su: #34d399;
+  }
+
+  /* Base Reset and Layout */
+  body {
+    background: #0a0e13;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  /* Animations */
+  @keyframes float {
+    from { transform: translateY(0); }
+    to { transform: translateY(-300px); }
+  }
+
+  /* Background Effects */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image:
+      radial-gradient(2px 2px at 20px 30px, #fff, transparent),
+      radial-gradient(2px 2px at 40px 70px, #fff, transparent),
+      radial-gradient(1px 1px at 100px 50px, #fff, transparent),
+      radial-gradient(1px 1px at 130px 80px, #fff, transparent),
+      radial-gradient(2px 2px at 200px 150px, #fff, transparent),
+      radial-gradient(1px 1px at 250px 100px, #fff, transparent),
+      radial-gradient(1px 1px at 300px 200px, #fff, transparent),
+      radial-gradient(2px 2px at 350px 250px, #fff, transparent),
+      radial-gradient(1px 1px at 180px 120px, #ffa500, transparent),
+      radial-gradient(3px 3px at 320px 180px, #fff, transparent);
+    background-size: 400px 300px;
+    z-index: -1;
+    opacity: 0.7;
+    animation: float 200s linear infinite;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -50%;
+    left: -25%;
+    width: 150%;
+    height: 100%;
+    background: radial-gradient(ellipse at center, transparent 0%, transparent 40%, #d97706 45%, transparent 50%);
+    opacity: 0.1;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  /* Form Elements */
+  label {
+    display: inline-block;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+
+  input[type="checkbox"] {
+    margin-right: 5px;
+  }
+
+  /* Range Sliders */
+  .range {
+    height: 16px;
+    background-color: #4b5563;
+    border-radius: 8px;
+  }
+
+  input[type="range"] {
+    width: 100%;
+    height: 8px;
+    border-radius: 5px;
+    background: #1a1a1a;
+    outline: none;
+    -webkit-appearance: none;
+    border: 1px solid #444;
+    position: relative;
+  }
+
+  /* Range Slider Thumbs */
+  input[type="range"]::-webkit-slider-thumb,
+  input[type="range"]::-moz-range-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    border: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    margin-top: -8px;
+  }
+
+  .range-primary::-webkit-slider-thumb,
+  .range-primary::-moz-range-thumb {
+    background-color: white;
+  }
+
+  .range-error::-webkit-slider-thumb,
+  .range-error::-moz-range-thumb {
+    background-color: #ff4444;
+  }
+
+  .range-info::-webkit-slider-thumb,
+  .range-info::-moz-range-thumb {
+    background-color: #4488ff;
+  }
+
+  .range-warning::-webkit-slider-thumb,
+  .range-warning::-moz-range-thumb {
+    background-color: #ff8800;
+  }
+
+  /* Components - Cards */
+  .card {
+    background-color: rgba(15, 20, 25, 0.85);
+    border: 1px solid rgba(217, 119, 6, 0.2);
+    backdrop-filter: blur(10px);
+    box-shadow:
+      0 0 20px rgba(0, 0, 0, 0.5),
+      inset 0 0 20px rgba(217, 119, 6, 0.05);
+  }
+
+  .card-title {
+    color: #f3f4f6;
+  }
+
+  /* Components - Badges */
+  .badge-error {
+    background-color: var(--assault-color);
+    border-color: var(--assault-color);
+    color: white;
+  }
+
+  .badge-info {
+    background-color: var(--skirmish-color);
+    border-color: var(--skirmish-color);
+    color: white;
+  }
+
+  .badge-warning {
+    background-color: var(--raid-color);
+    border-color: var(--raid-color);
+    color: white;
+  }
+
+  /* Components - Checkbox */
+  .checkbox-primary:checked {
+    background-color: #d97706;
+    border-color: #d97706;
+  }
+
+  .checkbox-primary:checked::before {
+    content: "✕";
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .checkbox-primary:checked svg {
+    display: none;
+  }
+
+  /* Components - Tables */
+  .table {
+    background-color: transparent;
+  }
+
+  .table th {
+    background-color: rgba(15, 20, 25, 0.6);
+    color: rgba(217, 119, 6, 0.9);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    border-bottom: 1px solid rgba(217, 119, 6, 0.2);
+  }
+
+  .table td {
+    border-bottom: 1px solid rgba(55, 65, 81, 0.3);
+  }
+
+  .table th.cursor-pointer:hover {
+    background-color: rgba(217, 119, 6, 0.1);
+  }
+
+  .table-zebra tbody tr:nth-child(2n) {
+    background-color: rgba(17, 24, 39, 0.5);
+  }
+
+  /* Components - Title */
+  .arcs-title {
+    font-family: serif;
+    letter-spacing: 0.3em;
+    text-shadow:
+      0 0 20px rgba(217, 119, 6, 0.5),
+      0 0 40px rgba(217, 119, 6, 0.3),
+      2px 2px 4px rgba(0, 0, 0, 0.8);
+    position: relative;
+  }
+
+  .arcs-title::before,
+  .arcs-title::after {
+    content: '✦';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.5em;
+    opacity: 0.7;
+  }
+
+  .arcs-title::before {
+    left: -30px;
+  }
+
+  .arcs-title::after {
+    right: -30px;
+  }
+
+  /* Components - Results */
+  #results {
+    padding: 25px;
+    margin: 20px 0;
+    color: white;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+  }
+
+  /* Components - Dice */
+  .dice-icon {
+    width: 30px;
+    height: 30px;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 1px;
+  }
+
+  @media (max-width: 640px) {
+    .dice-icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  /* Utility Classes - Text */
+  .label-text {
+    color: #e5e7eb;
+  }
+
+  .text-error { color: var(--assault-color); }
+  .text-info { color: var(--skirmish-color); }
+  .text-warning { color: var(--raid-color); }
+  .text-success { color: #34d399; }
+  .text-secondary { color: #9ca3af; }
+
+  /* Utility Classes - Table Cell Colors */
+  /* Base level 0 - transparent */
+  .value-0, .intercept-0, .red-0, .orange-0, .blue-0 {
+    background-color: transparent;
+    color: #9ca3af;
+  }
+
+  /* Value (green) scale */
+  .value-1 { background-color: rgba(34, 197, 94, 0.1); color: #86efac; font-weight: 500; }
+  .value-2 { background-color: rgba(34, 197, 94, 0.2); color: #4ade80; font-weight: 600; }
+  .value-3 { background-color: rgba(34, 197, 94, 0.3); color: #22c55e; font-weight: 700; }
+  .value-4 { background-color: rgba(34, 197, 94, 0.4); color: white; font-weight: 800; }
+  .value-5 { background-color: rgba(34, 197, 94, 0.5); color: white; font-weight: 900; }
+
+  /* Intercept (purple) scale */
+  .intercept-1 { background-color: rgba(168, 85, 247, 0.1); color: #e9d5ff; font-weight: 500; }
+  .intercept-2 { background-color: rgba(168, 85, 247, 0.2); color: #d8b4fe; font-weight: 600; }
+  .intercept-3 { background-color: rgba(168, 85, 247, 0.3); color: #c084fc; font-weight: 700; }
+  .intercept-4 { background-color: rgba(168, 85, 247, 0.4); color: white; font-weight: 800; }
+  .intercept-5 { background-color: rgba(168, 85, 247, 0.5); color: white; font-weight: 900; }
+
+  /* Red scale */
+  .red-1 { background-color: rgba(239, 68, 68, 0.1); color: #fca5a5; font-weight: 500; }
+  .red-2 { background-color: rgba(239, 68, 68, 0.2); color: #f87171; font-weight: 600; }
+  .red-3 { background-color: rgba(239, 68, 68, 0.3); color: #ef4444; font-weight: 700; }
+  .red-4 { background-color: rgba(239, 68, 68, 0.4); color: white; font-weight: 800; }
+  .red-5 { background-color: rgba(239, 68, 68, 0.5); color: white; font-weight: 900; }
+
+  /* Orange scale */
+  .orange-1 { background-color: rgba(249, 115, 22, 0.1); color: #fed7aa; font-weight: 500; }
+  .orange-2 { background-color: rgba(249, 115, 22, 0.2); color: #fdba74; font-weight: 600; }
+  .orange-3 { background-color: rgba(249, 115, 22, 0.3); color: #fb923c; font-weight: 700; }
+  .orange-4 { background-color: rgba(249, 115, 22, 0.4); color: white; font-weight: 800; }
+  .orange-5 { background-color: rgba(249, 115, 22, 0.5); color: white; font-weight: 900; }
+
+  /* Blue scale */
+  .blue-1 { background-color: rgba(59, 130, 246, 0.1); color: #dbeafe; font-weight: 500; }
+  .blue-2 { background-color: rgba(59, 130, 246, 0.2); color: #bfdbfe; font-weight: 600; }
+  .blue-3 { background-color: rgba(59, 130, 246, 0.3); color: #93c5fd; font-weight: 700; }
+  .blue-4 { background-color: rgba(59, 130, 246, 0.4); color: white; font-weight: 800; }
+  .blue-5 { background-color: rgba(59, 130, 246, 0.5); color: white; font-weight: 900; }
+
+  /* Media Queries */
+  @media (max-width: 768px) {
+    #results {
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+      gap: 10px;
+      padding: 15px;
+    }
+  }
+  </style>
+</head>
+<body>
+  <!-- SVG Dice Definitions -->
+  <svg style="display: none;">
+    <defs>
+      <!-- Assault Die -->
+      <symbol id="assault-die" viewBox="0 0 24 24">
+        <rect width="24" height="24" rx="3" fill="#8B1A1A"/>
+        <!-- Two starbursts -->
+        <!-- Top-left starburst -->
+        <g transform="translate(8, 8)">
+          <circle cx="0" cy="0" r="1.5" fill="white"/>
+          <path d="M 0,-4 L 0.5,-1.5 L 3,-3 L 1.5,-0.5 L 4,0 L 1.5,0.5 L 3,3 L 0.5,1.5 L 0,4 L -0.5,1.5 L -3,3 L -1.5,0.5 L -4,0 L -1.5,-0.5 L -3,-3 L -0.5,-1.5 Z" fill="white" stroke="white" stroke-width="0.5" stroke-linejoin="round"/>
+        </g>
+        <!-- Bottom-right starburst -->
+        <g transform="translate(16, 16)">
+          <circle cx="0" cy="0" r="1.5" fill="white"/>
+          <path d="M 0,-4 L 0.5,-1.5 L 3,-3 L 1.5,-0.5 L 4,0 L 1.5,0.5 L 3,3 L 0.5,1.5 L 0,4 L -0.5,1.5 L -3,3 L -1.5,0.5 L -4,0 L -1.5,-0.5 L -3,-3 L -0.5,-1.5 Z" fill="white" stroke="white" stroke-width="0.5" stroke-linejoin="round"/>
+        </g>
+      </symbol>
+
+      <!-- Skirmish Die -->
+      <symbol id="skirmish-die" viewBox="0 0 24 24">
+        <rect width="24" height="24" rx="3" fill="#2563EB"/>
+        <!-- Single starburst in center -->
+        <g transform="translate(12, 12)">
+          <circle cx="0" cy="0" r="2" fill="white"/>
+          <path d="M 0,-5 L 0.7,-2 L 4,-4 L 2,-0.7 L 5,0 L 2,0.7 L 4,4 L 0.7,2 L 0,5 L -0.7,2 L -4,4 L -2,0.7 L -5,0 L -2,-0.7 L -4,-4 L -0.7,-2 Z" fill="white" stroke="white" stroke-width="0.5" stroke-linejoin="round"/>
+        </g>
+      </symbol>
+
+      <!-- Raid Die -->
+      <symbol id="raid-die" viewBox="0 0 24 24">
+        <rect width="24" height="24" rx="3" fill="#C2410C"/>
+        <g transform="translate(12, 12)">
+          <!-- Outer circle -->
+          <circle r="8" fill="none" stroke="white" stroke-width="1.5"/>
+          <!-- Two horizontal keys, one facing left, one facing right -->
+          <!-- Top key facing right -->
+          <g transform="translate(0, -2)">
+            <rect x="-2" y="-0.5" width="6" height="1" fill="white"/>
+            <circle cx="-2" cy="0" r="1.5" fill="none" stroke="white" stroke-width="1"/>
+            <rect x="4" y="-0.5" width="0.8" height="1" fill="white"/>
+            <rect x="5.2" y="-0.5" width="0.8" height="1" fill="white"/>
+          </g>
+          <!-- Bottom key facing left -->
+          <g transform="translate(0, 2)">
+            <rect x="-4" y="-0.5" width="6" height="1" fill="white"/>
+            <circle cx="2" cy="0" r="1.5" fill="none" stroke="white" stroke-width="1"/>
+            <rect x="-4" y="-0.5" width="0.8" height="1" fill="white"/>
+            <rect x="-5.2" y="-0.5" width="0.8" height="1" fill="white"/>
+          </g>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+
+  <!-- Main Container -->
+  <div class="container mx-auto max-w-7xl p-4">
+    <!-- Header Section -->
+    <div class="text-center mb-8 relative">
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="w-96 h-1 bg-gradient-to-r from-transparent via-amber-600 to-transparent opacity-30"></div>
+      </div>
+      <h1 class="text-6xl font-black mb-2 text-amber-600 arcs-title relative z-10">ARCS</h1>
+      <h2 class="text-2xl font-bold text-gray-400 tracking-wider relative z-10">COMBAT SIMULATOR</h2>
+      <div class="mt-2 text-xs text-amber-600 opacity-50">✦ ✦ ✦</div>
+    </div>
+
+    <!-- Dice Selection Card -->
+    <div class="card bg-base-200 shadow-xl mb-8">
+      <div class="card-body">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- Dice Controls -->
+          <div>
+            <h2 class="card-title text-primary mb-4">Dice Selection</h2>
+
+            <div class="form-control mb-4">
+              <label class="label">
+                <span class="label-text text-error font-bold">ASSAULT</span>
+                <span class="badge badge-error text-base-100" id="assaultValue">0</span>
+              </label>
+              <input type="range" id="assault" min="0" max="6" value="0" class="range range-error" step="1">
+              <div class="w-full flex justify-between text-xs px-2 text-white">
+                <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
+              </div>
+            </div>
+
+            <div class="form-control mb-4">
+              <label class="label">
+                <span class="label-text text-info font-bold">SKIRMISH</span>
+                <span class="badge badge-info text-base-100" id="skirmishValue">3</span>
+              </label>
+              <input type="range" id="skirmish" min="0" max="6" value="3" class="range range-info" step="1">
+              <div class="w-full flex justify-between text-xs px-2 text-white">
+                <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
+              </div>
+            </div>
+
+            <div class="form-control">
+              <label class="label">
+                <span class="label-text text-warning font-bold">RAID</span>
+                <span class="badge badge-warning text-base-100" id="raidValue">0</span>
+              </label>
+              <input type="range" id="raid" min="0" max="6" value="0" class="range range-warning" step="1">
+              <div class="w-full flex justify-between text-xs px-2 text-white">
+                <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Results Display -->
+          <div>
+            <div id="results"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dice Combinations Card -->
+    <div class="card bg-base-200 shadow-xl">
+      <div class="card-body">
+        <h2 class="card-title text-primary mb-4">Dice Combinations</h2>
+
+        <div class="flex flex-wrap gap-4 mb-6">
+          <div class="form-control w-full lg:w-1/2">
+            <label class="label">
+              <span class="label-text">Total Dice</span>
+              <span class="badge badge-lg badge-outline font-bold text-white" id="diceFilterValue">3</span>
+            </label>
+            <input type="range" id="diceFilter" min="1" max="12" value="3" class="range range-primary w-full" step="1">
+            <div class="w-full flex justify-between text-xs px-2 text-white" id="diceFilterTicks">
+              <span>1</span><span>4</span><span>8</span><span>12</span>
+            </div>
+          </div>
+
+          <div class="form-control">
+            <label class="cursor-pointer label">
+              <span class="label-text mr-2">Include Raid Dice</span>
+              <input type="checkbox" id="includeRaid" class="checkbox checkbox-primary border-white hover:border-white">
+            </label>
+          </div>
+        </div>
+
+        <div id="combinationsTable" class="overflow-x-auto"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Constants - Dice probabilities
+    const DICE_PROBABILITIES = {
+      assault: {
+        hit: 7/6,
+        self: 3/6
+      },
+      skirmish: {
+        hit: 3/6
+      },
+      raid: {
+        raid: 4/6,
+        self: 3/6,
+        building: 3/6
+      }
+    };
+
+    // Utility functions
+    function round1(num) {
+      return Math.round(num * 100) / 100;
+    }
+
+    // Calculate dice results and update display
+    function calculateAndDisplayResults() {
+      const assaultCount = Number(document.getElementById('assault').value);
+      const skirmishCount = Number(document.getElementById('skirmish').value);
+      const raidCount = Number(document.getElementById('raid').value);
+
+      // Update slider value displays
+      document.getElementById('assaultValue').textContent = assaultCount;
+      document.getElementById('skirmishValue').textContent = skirmishCount;
+      document.getElementById('raidValue').textContent = raidCount;
+
+      // Calculate averages
+      const avgHits = DICE_PROBABILITIES.assault.hit * assaultCount + DICE_PROBABILITIES.skirmish.hit * skirmishCount;
+      const avgSelf = DICE_PROBABILITIES.assault.self * assaultCount + DICE_PROBABILITIES.raid.self * raidCount;
+      const avgRaid = DICE_PROBABILITIES.raid.raid * raidCount;
+      const avgBuilding = DICE_PROBABILITIES.raid.building * raidCount;
+      const interceptChance = 1 - Math.pow(5/6, assaultCount) * Math.pow(2/3, raidCount);
+
+      // Update results display
+      document.getElementById('results').innerHTML = `
+        <div class="w-full">
+          <div class="grid grid-cols-2 gap-3 mb-3">
+            <div class="relative bg-gradient-to-br from-green-900/20 to-green-800/10 backdrop-blur-md border-2 border-green-500/50 rounded-xl p-5 text-center overflow-hidden group hover:scale-105 transition-transform duration-200">
+              <div class="absolute inset-0 bg-gradient-to-t from-green-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="relative z-10">
+                <div class="text-xs uppercase tracking-widest text-green-300 mb-2 font-semibold">Hits</div>
+                <div class="text-4xl font-black text-green-400 drop-shadow-[0_0_10px_rgba(74,222,128,0.5)]">${round1(avgHits)}</div>
+              </div>
+            </div>
+            <div class="relative bg-gradient-to-br from-red-900/20 to-red-800/10 backdrop-blur-md border-2 border-red-500/50 rounded-xl p-5 text-center overflow-hidden group hover:scale-105 transition-transform duration-200">
+              <div class="absolute inset-0 bg-gradient-to-t from-red-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="relative z-10">
+                <div class="text-xs uppercase tracking-widest text-red-300 mb-2 font-semibold">Hits Taken</div>
+                <div class="text-4xl font-black text-red-400 drop-shadow-[0_0_10px_rgba(248,113,113,0.5)]">${round1(avgSelf)}</div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-3">
+            <div class="relative bg-gradient-to-br from-purple-900/20 to-purple-800/10 backdrop-blur-md border-2 border-purple-500/50 rounded-xl p-5 text-center overflow-hidden group hover:scale-105 transition-transform duration-200">
+              <div class="absolute inset-0 bg-gradient-to-t from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="relative z-10">
+                <div class="text-xs uppercase tracking-widest text-purple-300 mb-2 font-semibold">Intercept</div>
+                <div class="text-4xl font-black text-purple-400 drop-shadow-[0_0_10px_rgba(196,181,253,0.5)]">${Math.round(interceptChance * 100)}%</div>
+              </div>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="relative bg-gradient-to-br from-orange-900/20 to-orange-800/10 backdrop-blur-md border-2 border-orange-500/50 rounded-xl p-5 text-center overflow-hidden group hover:scale-105 transition-transform duration-200">
+              <div class="absolute inset-0 bg-gradient-to-t from-orange-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="relative z-10">
+                <div class="text-xs uppercase tracking-widest text-orange-300 mb-2 font-semibold">Raid</div>
+                <div class="text-4xl font-black text-orange-400 drop-shadow-[0_0_10px_rgba(251,146,60,0.5)]">${round1(avgRaid)}</div>
+              </div>
+            </div>
+            <div class="relative bg-gradient-to-br from-blue-900/20 to-blue-800/10 backdrop-blur-md border-2 border-blue-500/50 rounded-xl p-5 text-center overflow-hidden group hover:scale-105 transition-transform duration-200">
+              <div class="absolute inset-0 bg-gradient-to-t from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div class="relative z-10">
+                <div class="text-xs uppercase tracking-widest text-blue-300 mb-2 font-semibold">Building Hits</div>
+                <div class="text-4xl font-black text-blue-400 drop-shadow-[0_0_10px_rgba(96,165,250,0.5)]">${round1(avgBuilding)}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Table sorting functionality
+    let sortColumn = null;
+    let sortDirection = 'desc';
+
+    window.sortTable = function(column) {
+      if (sortColumn === column) {
+        // Toggle direction if clicking same column
+        sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+      } else {
+        // New column, default to descending
+        sortColumn = column;
+        sortDirection = 'desc';
+      }
+
+      generateCombinationsTable();
+    };
+
+    // Generate and display combinations table
+    function generateCombinationsTable() {
+      const filterValue = document.getElementById('diceFilter').value;
+      const includeRaid = document.getElementById('includeRaid').checked;
+      const totalDice = parseInt(filterValue);
+
+      // Generate all possible combinations
+      let combinations = generateDiceCombinations(includeRaid, totalDice);
+
+      // Calculate metrics for each combination
+      combinations = combinations.map(combo => calculateCombinationMetrics(combo));
+
+      // Sort combinations
+      combinations = sortCombinations(combinations, sortColumn, sortDirection);
+
+      // Build and display table HTML
+      const tableHTML = buildCombinationsTableHTML(combinations, includeRaid);
+      document.getElementById('combinationsTable').innerHTML = tableHTML;
+    }
+
+    // Generate all possible dice combinations
+    function generateDiceCombinations(includeRaid, totalDice) {
+      let combinations = [];
+      const maxTotal = includeRaid ? 18 : 12;
+
+      for (let total = 1; total <= maxTotal; total++) {
+        for (let a = 0; a <= Math.min(total, 6); a++) {
+          for (let s = 0; s <= Math.min(total - a, 6); s++) {
+            const r = total - a - s;
+            if (r >= 0 && r <= 6) {
+              combinations.push({a, s, r, total});
+            }
+          }
+        }
+      }
+
+      // Filter by total dice and raid inclusion
+      combinations = combinations.filter(c => c.total === totalDice);
+      if (!includeRaid) {
+        combinations = combinations.filter(c => c.r === 0);
+      }
+
+      return combinations;
+    }
+
+    // Calculate metrics for a combination
+    function calculateCombinationMetrics({a, s, r, total}) {
+      const hits = DICE_PROBABILITIES.assault.hit * a + DICE_PROBABILITIES.skirmish.hit * s;
+      const hitsTaken = DICE_PROBABILITIES.assault.self * a + DICE_PROBABILITIES.raid.self * r;
+      const intercept = Math.round((1 - Math.pow(5/6, a) * Math.pow(2/3, r)) * 100);
+      const raid = DICE_PROBABILITIES.raid.raid * r;
+      const building = DICE_PROBABILITIES.raid.building * r;
+
+      return {a, s, r, total, hits, hitsTaken, intercept, raid, building};
+    }
+
+    // Sort combinations based on column and direction
+    function sortCombinations(combinations, column, direction) {
+      return combinations.sort((x, y) => {
+        // Default sort if no column specified
+        if (!column) {
+          if (x.s !== y.s) return y.s - x.s;
+          if (x.a !== y.a) return y.a - x.a;
+          return y.r - x.r;
+        }
+
+        // Sort by specified column
+        let result = 0;
+        switch(column) {
+          case 'hits': result = x.hits - y.hits; break;
+          case 'hitsTaken': result = x.hitsTaken - y.hitsTaken; break;
+          case 'intercept': result = x.intercept - y.intercept; break;
+          case 'raid': result = x.raid - y.raid; break;
+          case 'building': result = x.building - y.building; break;
+        }
+
+        // Apply sort direction
+        return direction === 'asc' ? result : -result;
+      });
+    }
+
+    // CSS class getters for table cells
+    function getValueClass(value, max) {
+      if (value === 0) return 'value-0';
+      const ratio = value / max;
+      if (ratio <= 0.2) return 'value-1';
+      if (ratio <= 0.4) return 'value-2';
+      if (ratio <= 0.6) return 'value-3';
+      if (ratio <= 0.8) return 'value-4';
+      return 'value-5';
+    }
+
+    function getInterceptClass(percent) {
+      if (percent === 0) return 'intercept-0';
+      if (percent <= 20) return 'intercept-1';
+      if (percent <= 40) return 'intercept-2';
+      if (percent <= 60) return 'intercept-3';
+      if (percent <= 80) return 'intercept-4';
+      return 'intercept-5';
+    }
+
+    function getColorClass(value, max, colorName) {
+      if (value === 0) return `${colorName}-0`;
+      const ratio = value / max;
+      if (ratio <= 0.2) return `${colorName}-1`;
+      if (ratio <= 0.4) return `${colorName}-2`;
+      if (ratio <= 0.6) return `${colorName}-3`;
+      if (ratio <= 0.8) return `${colorName}-4`;
+      return `${colorName}-5`;
+    }
+
+    // Get sort indicator for column headers
+    function getSortIndicator(column) {
+      if (sortColumn !== column) return '';
+      return sortDirection === 'asc' ? ' ↑' : ' ↓';
+    }
+
+    // Build HTML for combinations table
+    function buildCombinationsTableHTML(combinations, includeRaid) {
+      let html = '<div class="relative">';
+      html += '<div class="border border-orange-600/20 rounded-lg overflow-hidden">';
+      html += '<table class="table table-compact w-full"><thead>';
+
+      // Header row 1
+      html += '<tr>';
+      html += '<th rowspan="2" class="text-center border border-orange-600/20">Dice</th>';
+      html += '<th colspan="2" class="text-center border border-orange-600/20">Combat</th>';
+      html += `<th rowspan="2" class="text-center cursor-pointer hover:bg-gray-700 border border-orange-600/20" onclick="sortTable('intercept')">Intercept${getSortIndicator('intercept')}</th>`;
+      if (includeRaid) {
+        html += '<th colspan="2" class="text-center border border-orange-600/20">Economy</th>';
+      }
+      html += '</tr>';
+
+      // Header row 2
+      html += '<tr>';
+      html += `<th class="text-center cursor-pointer hover:bg-gray-700 border border-orange-600/20" onclick="sortTable('hits')">Hits${getSortIndicator('hits')}</th>`;
+      html += `<th class="text-center cursor-pointer hover:bg-gray-700 border border-orange-600/20" onclick="sortTable('hitsTaken')">Hits Taken${getSortIndicator('hitsTaken')}</th>`;
+      if (includeRaid) {
+        html += `<th class="text-center cursor-pointer hover:bg-gray-700 border border-orange-600/20" onclick="sortTable('raid')">Raid${getSortIndicator('raid')}</th>`;
+        html += `<th class="text-center cursor-pointer hover:bg-gray-700 border border-orange-600/20" onclick="sortTable('building')">Building Hits${getSortIndicator('building')}</th>`;
+      }
+      html += '</tr></thead><tbody>';
+
+      // Table rows
+      for (const combo of combinations) {
+        html += buildTableRow(combo, includeRaid);
+      }
+
+      html += '</tbody></table></div></div>';
+      return html;
+    }
+
+    // Build a single table row
+    function buildTableRow({a, s, r, hits, hitsTaken, intercept, raid, building}, includeRaid) {
+      let html = '<tr>';
+
+      // Dice display cell
+      html += '<td><div class="flex flex-col gap-1">';
+
+      // Display dice icons by type
+      const diceTypes = [
+        {count: s, type: 'skirmish'},
+        {count: a, type: 'assault'},
+        {count: r, type: 'raid'}
+      ];
+
+      let hasDice = false;
+      for (const {count, type} of diceTypes) {
+        if (count > 0) {
+          hasDice = true;
+          html += '<div class="flex flex-wrap items-center gap-1 max-w-[120px] sm:max-w-none">';
+          for (let i = 0; i < count; i++) {
+            html += `<svg class="dice-icon"><use href="#${type}-die"/></svg>`;
+          }
+          html += '</div>';
+        }
+      }
+
+      if (!hasDice) {
+        html += '<span class="text-gray-400 text-sm">0</span>';
+      }
+
+      html += '</div></td>';
+
+      // Metric cells
+      html += `<td class="${getValueClass(hits, 7)}">${round1(hits)}</td>`;
+      html += `<td class="${getColorClass(hitsTaken, 3, 'red')}">${round1(hitsTaken)}</td>`;
+      html += `<td class="${getInterceptClass(intercept)}">${intercept}%</td>`;
+
+      if (includeRaid) {
+        html += `<td class="${getColorClass(raid, 4, 'orange')}">${round1(raid)}</td>`;
+        html += `<td class="${getColorClass(building, 3, 'blue')}">${round1(building)}</td>`;
+      }
+
+      html += '</tr>';
+      return html;
+    }
+
+    // Event listeners setup
+    function initializeEventListeners() {
+      // Dice sliders
+      const diceSliders = ['assault', 'skirmish', 'raid'];
+      diceSliders.forEach(id => {
+        document.getElementById(id).addEventListener('input', calculateAndDisplayResults);
+      });
+
+      // Dice filter slider
+      const diceFilter = document.getElementById('diceFilter');
+      const diceFilterValue = document.getElementById('diceFilterValue');
+
+      diceFilter.addEventListener('input', function() {
+        diceFilterValue.textContent = this.value;
+        generateCombinationsTable();
+      });
+
+      // Include raid checkbox
+      document.getElementById('includeRaid').addEventListener('change', function() {
+        const maxDice = this.checked ? 18 : 12;
+        const currentValue = parseInt(diceFilter.value);
+
+        // Update slider max value
+        diceFilter.max = maxDice;
+
+        // Adjust current value if needed
+        if (currentValue > maxDice) {
+          diceFilter.value = maxDice;
+          diceFilterValue.textContent = maxDice;
+          diceFilter.dispatchEvent(new Event('input'));
+        }
+
+        // Update tick marks
+        const ticksDiv = document.getElementById('diceFilterTicks');
+        ticksDiv.innerHTML = this.checked
+          ? '<span>1</span><span>6</span><span>12</span><span>18</span>'
+          : '<span>1</span><span>4</span><span>8</span><span>12</span>';
+
+        generateCombinationsTable();
+      });
+    }
+
+    // Initialize application
+    initializeEventListeners();
+    calculateAndDisplayResults();
+    generateCombinationsTable();
+  </script>
+</body>
+</html>

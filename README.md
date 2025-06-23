@@ -1,5 +1,9 @@
 # games
 
+## Tools
+[Byoyomi](/games/byoyomi) - a timer  
+[ARCS Combat Sim](/games/arcs) - dice sim for ARCS board game  
+
 ## Card based
 [Durak](/games/durak) - classic  
 [Slap](/games/slap) - classic  
